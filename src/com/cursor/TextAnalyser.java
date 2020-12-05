@@ -14,22 +14,23 @@ public class TextAnalyser {
         scanner = new Scanner(bufferedReader);
     }
 
-    private List<String> getStrings() {
-        List<String> strings = new ArrayList<>();
-        while (scanner.hasNext()) {
-            strings.add(scanner.nextLine().toLowerCase());
-        }
-        return strings;
-    }
-
     private List<String> getWords() {
-        List<String> strings = getStrings();
-        List<String> words = getStrings();
-        for (String string : strings) {
-            words.addAll(Arrays.asList(string.split("\\P{L}+")));
+        List<String> words = new ArrayList<>();
+        scanner.useDelimiter("\\p{Space}");
+        while (scanner.hasNext()) {
+            String value = scanner.next();
+            value = value.replaceAll("[,.;:!?\"<>'{}\\[\\]()—*+%$@|\\\\/“”]+", "")
+                    .replaceAll("\\p{Digit}", "").trim();
+            if (value.contains("-") && value.length() == 1) {
+                continue;
+            }
+            if (!value.isBlank()) {
+                words.add(value.toLowerCase());
+            }
         }
         return words;
     }
+
 
     public void show() throws IOException {
         List<String> words = getWords();
