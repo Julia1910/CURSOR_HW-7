@@ -1,17 +1,25 @@
 package com.cursor;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TextAnalyser {
     private Scanner scanner;
     private FileInputStream file;
 
-    public TextAnalyser(String fileName) throws IOException {
-        file = new FileInputStream(fileName);
-        DataInputStream in = new DataInputStream(file);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        scanner = new Scanner(bufferedReader);
+    public TextAnalyser(String fileName) {
+        try {
+            file = new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not founded");
+        }
+        try (DataInputStream in = new DataInputStream(file)) {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            scanner = new Scanner(bufferedReader);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<String> getWords() {
